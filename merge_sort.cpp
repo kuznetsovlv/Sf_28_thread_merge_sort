@@ -13,7 +13,7 @@ void mergeSort(int *arr, const size_t size)
 
 void mergeSort(int *beg, int *end)
 {
-	if(end <= beg)
+	if(end - 1 <= beg)
 	{
 		return;
 	}
@@ -37,40 +37,46 @@ void mergeSort(int *beg, int *end)
 
 void merge(int *beg, int *mid, int *end)
 {
-	while(*beg < *mid)
+	const size_t size = end - beg;
+
+	int *tmp = new int[size];
+
+	int *first = beg, *second = mid;
+	size_t i = 0;
+
+	while(first < mid && second < end)
 	{
-		++beg;
+		if(*first < *second)
+		{
+			*(tmp + i) = *first;
+			++first;
+		}
+		else
+		{
+			*(tmp + i) = *second;
+			++second;
+		}
+		++i;
 	}
 
-	int *current = mid;
-
-	while(current < end || mid < end)
+	while(first < mid)
 	{
-		if(beg == current)
-		{
-			break;
-		}
-
-		if(*mid < *current)
-		{
-			if(*mid < *beg)
-			{
-				std::swap(*beg, *mid);
-			}
-			++beg;
-			if(beg == mid)
-			{
-				++mid;
-			}
-		}
-		else if(current < end)
-		{
-			if(*current < *beg)
-			{
-				std::swap(*beg, *current);
-				++current;
-			}
-			++beg;
-		}
+		*(tmp + i) = *first;
+		++first;
+		++i;
 	}
+
+	while(second < end)
+	{
+		*(tmp + i) = *second;
+		++second;
+		++i;
+	}
+
+	for(size_t i = 0; i < size; ++i)
+	{
+		*(beg + i) = *(tmp + i);
+	}
+
+	delete [] tmp;
 }
